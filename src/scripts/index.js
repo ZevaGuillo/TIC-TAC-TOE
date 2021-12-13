@@ -40,7 +40,7 @@ function changeColorButton(button1, button2, color){
 
 //---------------------------- GAME ------------------------
 const displayPlayer = document.getElementById('displayPlayer');
-const cell = document.querySelectorAll('.cell');
+const cells = document.querySelectorAll('.cell');
 const resetButton = document.getElementById('resetButton');
 
 let board = ['','','','','','','','',''];
@@ -88,7 +88,7 @@ function handleResultValidation() {
     }
 
     if (roundWon) {
-            announce(currentPlayer === players.X ? PLAYERX_WON : PLAYERO_WON);
+            announce(currentPlayer === players.X ? players.X : players.O);
             isGameActive = false;
             return;
         }
@@ -100,20 +100,23 @@ function handleResultValidation() {
 
 const announce = (type) =>{
     switch(type){
-        case PLAYERO_WON:
+        case players.O:
             console.log('Player O won');
+            modalOpen(players.O);
             break;
-        case PLAYERX_WON:
+        case players.X:
             console.log('Player X won');
+            modalOpen(players.X);
             break;
         case TIE:
             console.log('TIE');
+            modalOpen('<p class="winner">TIE</p>');
             break;
     }
 }
 
 const isValidAction = (tile) => {
-    if (tile.innerText === players.X || tile.innerText === players.O){
+    if (tile.innerHTML !== ''){
         return false;
     }
 
@@ -125,14 +128,12 @@ const updateBoard =  (index) => {
 }
 
 const changePlayer = ()=>{
-    console.log(currentPlayer);
     currentPlayer = currentPlayer === players.X ? players.O : players.X;
     displayPlayer.innerHTML = currentPlayer;
 }
 
 const userAction = (cell, index) => {
     if(isValidAction(cell) && isGameActive){
-        console.log(cell);
         cell.innerHTML = currentPlayer;
         updateBoard(index);
         handleResultValidation();
@@ -140,6 +141,63 @@ const userAction = (cell, index) => {
     }
 }
 
-cell.forEach((cell, index) =>{
+cells.forEach((cell, index) =>{
     cell.addEventListener('click', () => userAction(cell, index));
 })
+
+// --------------------- Modal -----------------------------------------
+
+const modal = document.getElementById('modal');
+const modalContainer = document.getElementById('modal-container');
+const resetBModal = document.getElementById('resetButtonModal'); 
+
+const modalOpen = (text)=>{
+    modalContainer.style.opacity = '1';
+    modalContainer.style.visibility = 'visible';
+    let winner = modal.children[0];
+    console.log(winner)
+    let newNod = document.createElement('div');
+    newNod.innerHTML = text;
+    winner.appendChild(newNod);
+    modal.classList.toggle('modal-close');
+};
+
+function modalClose() {
+    modalContainer.style.opacity = "0";
+    modalContainer.style.visibility = "hidden";
+    modal.classList.toggle("modal-close");
+  }
+
+window.addEventListener('click', (e) =>{
+    if(e.target === modalContainer){
+        modalClose();
+    }
+})
+
+resetBModal.addEventListener('click', ()=>{
+    resetGame();
+    modalClose();
+});
+
+// ----------------------- ReStart --------------------------------------
+const resetB = document.getElementById('resetButton');
+
+resetB.addEventListener('click', resetGame);
+
+function resetGame (){
+    isGameActive = true;
+    board = ['','','','','','','','',''];
+
+    let displaySon = displayPlayer.children[0];
+    displayPlayer.removeChild(displaySon);
+
+    modal.children[0].removeChild(modal.children[0].lastChild);
+
+    cells.forEach((cell,index) => {
+        let children = cell.children;
+        if(children.length !== 0){
+            cell.removeChild(children[0]);
+        }
+        
+    })
+};
