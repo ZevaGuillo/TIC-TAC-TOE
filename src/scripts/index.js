@@ -133,12 +133,18 @@ const changePlayer = ()=>{
 }
 
 const userAction = (cell, index) => {
+    console.log(index)
     if(isValidAction(cell) && isGameActive){
         cell.innerHTML = currentPlayer;
         updateBoard(index);
         handleResultValidation();
         changePlayer();
     }
+
+    if(rival  === 'Computer'){
+        // TODO crear logica para un turno automatico 
+    };
+
 }
 
 cells.forEach((cell, index) =>{
@@ -155,7 +161,6 @@ const modalOpen = (text)=>{
     modalContainer.style.opacity = '1';
     modalContainer.style.visibility = 'visible';
     let winner = modal.children[0];
-    console.log(winner)
     let newNod = document.createElement('div');
     newNod.innerHTML = text;
     winner.appendChild(newNod);
@@ -189,15 +194,17 @@ function resetGame (){
     board = ['','','','','','','','',''];
 
     let displaySon = displayPlayer.children[0];
-    displayPlayer.removeChild(displaySon);
+    if(displaySon !=  undefined){
+        displayPlayer.removeChild(displaySon);
 
-    modal.children[0].removeChild(modal.children[0].lastChild);
-
-    cells.forEach((cell,index) => {
-        let children = cell.children;
-        if(children.length !== 0){
-            cell.removeChild(children[0]);
-        }
-        
-    })
+        modal.children[0].removeChild(modal.children[0].lastChild);
+    
+        cells.forEach((cell,index) => {
+            let children = cell.children;
+            if(children.length !== 0){
+                cell.removeChild(children[0]);
+            }
+            
+        })
+    }
 };

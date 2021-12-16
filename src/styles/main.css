@@ -125,6 +125,7 @@ nav{
     .level{
         width: 45%;
     }
+    
 }
 .displayPlayer .fas{
     font-weight: 700;
@@ -161,7 +162,7 @@ nav{
   
   .modal {
     background: #fff;
-    width: 50%;
+    width: 60%;
     height: 30vh;
     display: flex;
     flex-direction: column;
@@ -186,8 +187,9 @@ nav{
       flex-direction: column;
   }
 
-  .message .winner{
-      padding-top: 1rem;
+  .message .winner,
+  .message .fas{
+      padding-top: 1.5rem;
       font-size: 2.5em;
   }
 
