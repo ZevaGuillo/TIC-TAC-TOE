@@ -133,7 +133,6 @@ const changePlayer = ()=>{
 }
 
 const userAction = (cell, index) => {
-    console.log(index)
     if(isValidAction(cell) && isGameActive){
         cell.innerHTML = currentPlayer;
         updateBoard(index);
@@ -143,6 +142,9 @@ const userAction = (cell, index) => {
 
     if(rival  === 'Computer'){
         // TODO crear logica para un turno automatico 
+        blockCell(true);
+        setTimeout(optionComputer, 500);
+        
     };
 
 }
@@ -208,3 +210,30 @@ function resetGame (){
         })
     }
 };
+
+// ----------------------Computer----------------------------------
+function optionComputer(){
+    const cellsArr = Array.from(cells);
+    let emptycells = cellsArr.filter(x => {
+        return x.innerHTML === '';
+    });
+
+    let option = getRandom(0,emptycells.length);
+    let cell = cellsArr.indexOf(emptycells[option]);
+    
+    if (isGameActive){
+        cells[cell].innerHTML = currentPlayer;
+        updateBoard(cell);
+        handleResultValidation();
+        changePlayer();
+    }
+    blockCell(false);
+} 
+
+function getRandom(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
+function blockCell (valid){
+    cells.forEach(x => x.style.pointerEvents = valid?'none':'');
+}
